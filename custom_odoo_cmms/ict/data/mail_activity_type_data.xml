@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <!-- ICT-specific activities, for automatic generation mainly -->
+    <record id="mail_act_ict_request" model="mail.activity.type">
+        <field name="name">ICT Request</field>
+        <field name="icon">fa-wrench</field>
+        <field name="res_model">ict.request</field>
+    </record>
+</data>
+</odoo>
