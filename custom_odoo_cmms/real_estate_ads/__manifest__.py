@@ -7,8 +7,10 @@
         Real Estate module to show available properties
     """,
     "category": "Sales",
-    "depends":[],
-    "date":[],
+    "depends": [],
+    "date": [
+        'security/ir.model.access.csv',
+    ],
     "installable":True,
     "application":True,
     "license": "LGPL-3"
