@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--   -->
+        <!-- Main Menu  -->
+        <!-- Step: 1 Create Main Menu;  (Root Menu): *** id="menu_root_property_ads"-->
+        <!-- Step: 2 Create (Child Menu): *** id="menu_property_ads"-->
+        <!-- Step: 2 Create (Child Of Child Menu): *** id="menu_property"-->
 <odoo>
     <menuitem name="Property Ads" id="menu_root_property_ads" web_icon="real_estate_ads,static/description/icon.png">
         <menuitem id="menu_property_ads" name="Ads">
             <menuitem id="menu_property" name="Property" action="real_estate_ads.action_property"/>
+        </menuitem>
+        <menuitem id="menu_property_ads_settings" name="Settings">
+            <menuitem id="menu_property_type" name="Property Type" action="real_estate_ads.action_property_type"/>
         </menuitem>
     </menuitem>
 </odoo>

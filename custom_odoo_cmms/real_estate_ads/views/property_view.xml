@@ -4,11 +4,12 @@
 
         <!-- Step: 3 "Third Action", "Tree_View Action" -->
         <record id="estate_property_tree_view" model="ir.ui.view">
-            <field name="name">estate.property.form</field>
+            <field name="name">estate.property.tree</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="type_id"/>
                     <field name="postcode"/>
                     <field name="date_availability"/>
                     <field name="expected_price"/>
@@ -28,6 +29,7 @@
                         <group>
                             <field name="name"/>
                             <group>
+                                <field name="type_id"/>
                                 <field name="postcode"/>
                                 <field name="date_availability"/>
                             </group>
