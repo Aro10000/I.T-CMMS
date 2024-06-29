@@ -48,6 +48,8 @@ class Property(models.Model):
     garage_orientation = fields.Selection([('north', 'North'), ('north', 'North'),
                                            ('south', 'South'), ('east', 'East'),
                                            ('west', 'Wests'),], string='Garage Orientation', default='north')
+    offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
+
 
     # Automatic Fields: id, create_date, create_uid, write_date, write-uid
 

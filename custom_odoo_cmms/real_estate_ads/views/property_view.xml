@@ -39,13 +39,21 @@
                                 <field name="best_offer"/>
                                 <field name="selling_price"/>
                             </group>
+                            <field name='offer_ids'>
+                                <tree>
+                                    <field name="price"/>
+                                    <field name="status"/>
+                                    <field name="partner_id"/>
+                                    <field name="property_id"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
 
                 </form>
             </field>
         </record>
-<!--   -->
+        <!--   -->
         <!-- Main View Action  -->
         <!-- Step: 1 "first Action" -->
         <record id="action_property" model="ir.actions.act_window">
