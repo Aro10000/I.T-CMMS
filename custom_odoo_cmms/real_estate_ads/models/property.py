@@ -30,6 +30,8 @@ class Property(models.Model):
     _description = 'Estate Properties'
 
     name = fields.Char(string='Name', required=True)
+    # Add Many2may(tag_ids) Field To this Model('estate.property') to link with Co-Model('estate.property.tag')
+    tag_ids = fields.Many2many('estate.property.tag', string='Property Tag')
     # Add Many2one(type_id) Field To this Model('estate.property') to link with Co-Model('estate.property.type')
     type_id = fields.Many2one('estate.property.type', string='Property Type')
     description = fields.Text(string='Description')
@@ -56,3 +58,12 @@ class PropertyType(models.Model):
     _description = 'Estate Properties Type'
 
     name = fields.Char(string='Name', required=True)
+
+
+#        THIRD MODEL
+class PropertyTag(models.Model):
+    _name = 'estate.property.tag'
+    _description = 'Estate Properties Tag'
+
+    name = fields.Char(string='Name', required=True)
+
