@@ -44,11 +44,14 @@ class Property(models.Model):
     living_area = fields.Integer(string='Living Area(sqs)')
     facades = fields.Integer(string='Facades')
     garage = fields.Boolean(string='Garage', default=False)
-    garage_area = fields.Integer(string='Garage Area')
-    garage_orientation = fields.Selection([('north', 'North'), ('north', 'North'),
+    garden = fields.Boolean(string='Garden', default=False)
+    garden_area = fields.Integer(string='Garden Area')
+    garden_orientation = fields.Selection([('north', 'North'), ('north', 'North'),
                                            ('south', 'South'), ('east', 'East'),
                                            ('west', 'Wests'),], string='Garage Orientation', default='north')
     offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
+    sales_id = fields.Many2one('res.users', string='Salesman')
+    buyer_id = fields.Many2one('res.partner', string="Buyer")
 
 
     # Automatic Fields: id, create_date, create_uid, write_date, write-uid
