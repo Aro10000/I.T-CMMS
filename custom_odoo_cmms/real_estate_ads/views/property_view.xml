@@ -53,14 +53,18 @@
                                     <field name="garden"/>
                                     <field name="garden_area"/>
                                     <field name="garden_orientation"/>
+                                    <field name="total_area"/>
                                 </group>
                             </page>
                             <page string="Offers">
                                 <field name='offer_ids'>
-                                    <tree>
+                                    <tree editable="button">
                                         <field name="price"/>
-                                        <field name="status"/>
                                         <field name="partner_id"/>
+                                        <field name="creation_date"/>
+                                        <field name="validity"/>
+                                        <field name="deadline"/>
+                                        <field name="status" nolable="1"/>
                                     </tree>
                                 </field>
                             </page>

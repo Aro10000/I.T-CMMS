@@ -22,7 +22,7 @@
 #                                            ('south', 'South'), ('east', 'East'),
 #                                            ('west', 'Wests'),], string='Garage Orientation', default='north')
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class Property(models.Model):
@@ -53,8 +53,20 @@ class Property(models.Model):
     sales_id = fields.Many2one('res.users', string='Salesman')
     buyer_id = fields.Many2one('res.partner', string="Buyer")
 
-
     # Automatic Fields: id, create_date, create_uid, write_date, write-uid
+
+    # Step 22: Understanding Computed Fields and On-change ORM Decorator
+    # This is Understanding Computed Fields
+
+    #Need to add an "@api Decorator" for the function to work
+    @api.depends('living_area', 'garden_area')# Use @api.depends because the computed field("_compute_total_area") is dependant on these 2 fields('living_area', 'garden_area') to work
+    def _compute_total_area(self): # Name and define a function
+        for rec in self: # for-loop in self
+            rec.total_area = rec.living_area + rec.garden_area # These are the fields to be computed: Keep computation simple
+            # Also Remember to always keep "function" above the computed field ("total_area")
+
+    #Always put "Compute Fields" below its "Compute Function" when the compute= attribute is not a string
+    total_area = fields.Integer(string='Total Area', compute=_compute_total_area)# Always use the "Compute" Attribute: for Compute Fields
 
 
 #        SECOND MODEL
