@@ -18,6 +18,7 @@
         # Data Files:
         # Step 23A : Working with Data Files
         'data/property_type.xml'
+        #'data/estate.property.type.csv'   ### A TEST EXAMPLE CSV FILE TO RECORD DATA: the same as 'data/property_type.xml'
     ],
     "installable":True,
     "application":True,
