@@ -1,0 +1,18 @@
+<!--# Step 23A : Working with Data Files: CREATE RECORDS: "<record></record>" Data -->
+
+<odoo>
+    <data noupdate="1">
+        <record id="property_type_house" model="estate.property.type">
+            <field name="name">House</field>
+        </record>
+        <record id="property_type_apartment" model="estate.property.type">
+            <field name="name">Apartment</field>
+        </record>
+        <record id="property_type_penthouse" model="estate.property.type">
+            <field name="name">Penthouse</field>
+        </record>
+        <record id="property_type_castle" model="estate.property.type">
+            <field name="name">Castle</field>
+        </record>
+    </data>
+</odoo>
