@@ -24,7 +24,7 @@
 
 
     ],
-    'demo': ['data/biotech_demo.xml'],
+    #'demo': ['data/biotech_demo.xml'],
     'installable': True,
     'application': True,
     

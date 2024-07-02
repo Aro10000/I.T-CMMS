@@ -21,7 +21,7 @@
         'views/mail_activity_views.xml',
         'data/maintenance_cron.xml',
     ],
-    'demo': ['data/maintenance_demo.xml'],
+    #'demo': ['data/maintenance_demo.xml'],
     'installable': True,
     'application': True,
     'assets': {

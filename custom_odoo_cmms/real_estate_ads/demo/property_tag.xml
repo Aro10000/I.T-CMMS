@@ -1,18 +1,18 @@
-<!--#  Step 23A : Working with Data Files: CREATE RECORDS: "<record></record>" Data -->
-
+<!--# These DEMO DATA will NEVER be CREATED if I did not ENABLE DEMO DATA AT the creation of my database -->
+<!--#  Step 23b : Working with Data Files: CREATE RECORDS with Demo Data -->
 <odoo>
-    <data noupdate="1">
-        <record id="property_tag_house" model="estate.property.type">
-            <field name="name">House</field>
+    <data>
+        <record id="property_tag_cozy" model='estate.property.tag'>
+            <field name="name">Cozy</field>
         </record>
-        <record id="property_tag_apartment" model="estate.property.tag">
-            <field name="name">Apartment</field>
+        <record id="property_tag_renovated" model='estate.property.tag'>
+            <field name="name">Renovated</field>
         </record>
-        <record id="property_tag_penthouse" model="estate.property.tag">
-            <field name="name">Penthouse</field>
+        <record id="property_tag_new" model='estate.property.tag'>
+            <field name="name">New</field>
         </record>
-        <record id="property_tag_castle" model="estate.property.tag">
-            <field name="name">Castle</field>
+        <record id="property_tag_castle" model='estate.property.tag'>
+            <field name="name">Abandoned</field>
         </record>
     </data>
 </odoo>

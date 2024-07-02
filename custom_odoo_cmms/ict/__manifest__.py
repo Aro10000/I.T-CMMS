@@ -21,7 +21,7 @@
         'views/mail_activity_views.xml',
         'data/ict_cron.xml',
     ],
-    'demo': ['data/ict_demo.xml'],
+    #'demo': ['data/ict_demo.xml'],
     'installable': True,
     'application': True,
     
