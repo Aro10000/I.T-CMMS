@@ -28,3 +28,9 @@ class PropertOffer(models.Model):
     def _inverse_deadline(self):
         for rec in self:
             rec.validity = (rec.deadline - rec.creation_date).days
+
+    # STEP 25A: Understanding Method Decorators and their Usage
+    #...@api.autovacuum  # this Decorator deletes "refused" data everyday  ( settings/Schedule Action)
+    #...def _cleans_offers(self):
+    #...    self.search([('status', '=', 'refused')]).unlink()  # unlink means delete
+
