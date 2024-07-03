@@ -23,7 +23,7 @@ class PropertOffer(models.Model):
 
     # Step 22B: Understanding Computed Fields and On-change ORM Decorator
     # This is Understanding Computed Fields
-    @api.depends('validity', 'creation_date')
+    @api.depends('validity', 'creation_date')# STEP 25D: Understanding Method Decorators and their Usage: (..@api.depends_context()... optional)
     def _compute_deadline(self):
         for rec in self:
             if rec.creation_date and rec.validity:#                                        Import "from datetime import timedelta " (insert ABOVE) to computer date fields
