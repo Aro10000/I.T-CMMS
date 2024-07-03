@@ -15,27 +15,39 @@ class PropertOffer(models.Model):
     deadline = fields.Date(string='Deadline', compute='_compute_deadline', inverse='_inverse_deadline')# Always use Compute And Inverse Attributes: for Compute And Inverse Fields
 
     # STEP 25B: Understanding Method Decorators and their Usage: (@api.model Decorator)
-    @api.model
-    def _set_create_date(self):
-        return fields.Date.today()
-    creation_date = fields.Date(string='Create Date', default=_set_create_date)
+    # ... @api.model#     Must be above Field( creation_date )
+    # ... def _set_create_date(self):
+    # ...     return fields.Date.today()
+    #... creation_date = fields.Date(string='Create Date', default=_set_create_date)
+    creation_date = fields.Date(string='Create Date')
 
     # Step 22B: Understanding Computed Fields and On-change ORM Decorator
     # This is Understanding Computed Fields
     @api.depends('validity', 'creation_date')
     def _compute_deadline(self):
         for rec in self:
-            if rec.creation_date and rec.validity:#                                     Import "from datetime import timedelta " (insert ABOVE) to computer date fields
-                rec.deadline = rec.creation_date + timedelta(days=rec.validity)#        You will always getan error trying to directly compute 2 differebt types of fields....
+            if rec.creation_date and rec.validity:#                                        Import "from datetime import timedelta " (insert ABOVE) to computer date fields
+                rec.deadline = rec.creation_date + timedelta(days=rec.validity)#        You will always get an error trying to directly compute 2 different types of fields....
             else:#                                                                      but use "else" to control computing and stop "errors"
                 rec.deadline = False
 
     def _inverse_deadline(self):
+        global rec
         for rec in self:
-            rec.validity = (rec.deadline - rec.creation_date).days
+            if rec.deadline and rec.creation_date:
+                rec.validity = (rec.deadline - rec.creation_date).days
+        else:
+            rec.validity = False
 
     # STEP 25A: Understanding Method Decorators and their Usage
     #...@api.autovacuum  # this Decorator deletes "refused" data everyday  ( settings/Schedule Action)
     #...def _cleans_offers(self):
     #...    self.search([('status', '=', 'refused')]).unlink()  # unlink means delete
 
+    # STEP 25C: Understanding Method Decorators and their Usage: (@api.model_create_multi)
+    @api.model_create_multi
+    def create(self, vals):
+        for rec in vals:
+            if not rec.get('creation_date'):
+                rec['creation_date'] = fields.Date.today()
+        return super(PropertOffer, self).create(vals)
