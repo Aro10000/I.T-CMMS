@@ -51,7 +51,14 @@ class Property(models.Model):
                                            ('west', 'Wests'),], string='Garage Orientation', default='north')
     offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
     sales_id = fields.Many2one('res.users', string='Salesman')
-    buyer_id = fields.Many2one('res.partner', string="Buyer")
+    #STEP 24 B: Creating Related Fields and Applying Domains
+    buyer_id = fields.Many2one('res.partner', string="Buyer", domain=[('is_company', '=', True)])
+    #
+    #STEP 24 A: Creating Related Fields and Applying Domains
+    # RULE 1: A related field takes a value based on a Many2one field(EXAMPLE: "buyer_id") that is available in that model(Example "res.partner model") to Reference to another field(EXAMPLE: "phone")
+    # RULE 2: "related fields" must be of the same type of field that it was inherited from.
+    # RULE 3: "related fields" can only be related to "Many2one Fields"
+    phone = fields.Char(string='Phone', related='buyer_id.phone')
 
     # Automatic Fields: id, create_date, create_uid, write_date, write-uid
 
