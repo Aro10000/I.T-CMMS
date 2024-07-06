@@ -31,18 +31,19 @@ class PropertOffer(models.Model):
     name = fields.Char(string='Description', compute=_compute_name)# STEP 27-F. Actions and Buttons: Working with States and Smart Buttons -->
     price = fields.Float(string='Price', required=True)
     status = fields.Selection([('accepted', 'Accepted'),
-                               ('refuse', 'Refused'),], string='status')
+                               ('refused', 'Refused'),], string='status')
     partner_id = fields.Many2one('res.partner', string='Customer')
     property_id = fields.Many2one('estate.property', string='Property')
-    validity = fields.Integer(string='Validity (days)')
+    validity = fields.Integer(string='Validity (days)', default=7)
     deadline = fields.Date(string='Deadline', compute='_compute_deadline', inverse='_inverse_deadline')# Always use Compute And Inverse Attributes: for Compute And Inverse Fields
 
     # STEP 25B: Understanding Method Decorators and their Usage: (@api.model Decorator)
-    # ... @api.model#     Must be above Field( creation_date )
-    # ... def _set_create_date(self):
-    # ...     return fields.Date.today()
-    #... creation_date = fields.Date(string='Create Date', default=_set_create_date)
-    creation_date = fields.Date(string='Create Date')
+    @api.model  # Must be above Field( creation_date )
+    def _set_create_date(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+        return fields.Date.today()
+
+    creation_date = fields.Date(string='Create Date', default=_set_create_date)#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+    #creation_date = fields.Date(string='Create Date')
 
     # Step 22-B: Understanding Computed Fields and On-change ORM Decorator
     # This is Understanding Computed Fields
@@ -67,12 +68,12 @@ class PropertOffer(models.Model):
     #...    self.search([('status', '=', 'refused')]).unlink()  # unlink means delete
 
     # STEP 25-C: Understanding Method Decorators and their Usage: (@api.model_create_multi)
-    @api.model_create_multi
-    def create(self, vals):
-        for rec in vals:
-            if not rec.get('creation_date'):
-                rec['creation_date'] = fields.Date.today()
-        return super(PropertOffer, self).create(vals)
+    #@api.model_create_multi
+    #def create(self, vals):
+        #for rec in vals:
+            #if not rec.get('creation_date'):
+               # rec['creation_date'] = fields.Date.today()
+        #return super(PropertOffer, self).create(vals)
 
     # STEP 25-E: Understanding Method Decorators and their Usage: (..@api.constrains('field')..)
     @api.constrains('validity')
@@ -81,3 +82,13 @@ class PropertOffer(models.Model):
             if rec.deadline <= rec.creation_date:
                 raise ValidationError("Deadline cannot be before creation date")
 
+    #35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+    def action_accept_offer(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+        if self.property_id:
+            self.property_id.write({
+                'selling_price': self.price# This LOGIC is to allow "Accepted button" to Automatically update "Selling Price" When Selected or Click.
+            })
+        self.status = 'accepted'
+
+    def action_decline_offer(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+        self.status = 'refused'

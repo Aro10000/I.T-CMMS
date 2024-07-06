@@ -44,7 +44,7 @@ class Property(models.Model):
     postcode = fields.Char(string='Postcode')
     date_availability = fields.Date(string='Available From')
     expected_price = fields.Float(string='Expected Price')
-    best_offer = fields.Float(string='Best Offer')
+    best_offer = fields.Float(string='Best Offer', compute='_compute_best_price')
     selling_price = fields.Float(string='Selling Price')
     bedrooms = fields.Integer(string='Bedrooms')
     living_area = fields.Integer(string='Living Area(sqs)')
@@ -94,6 +94,14 @@ class Property(models.Model):
     offer_count = fields.Integer(string="Offer Count", compute=_compute_offer_count)
 
 
+    @api.depends('offer_ids')#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+    def _compute_best_price(self):
+        for rec in self:
+            if rec.offer_ids:
+                rec.best_offer = max(rec.offer_ids.mapped('price'))
+            else:
+                rec.best_offer = 0
+
 #        SECOND MODEL
 class PropertyType(models.Model):
     _name = 'estate.property.type'
@@ -108,5 +116,5 @@ class PropertyTag(models.Model):
     _description = 'Estate Properties Tag'
 
     name = fields.Char(string='Name', required=True)
-    color = fields.Integer(string='Color')
+    color = fields.Integer(string='Color')#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo
 

@@ -22,7 +22,8 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="color" widget="color_picker"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
+                            <field name="color" invisible="1" widget="color_picker"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
+                            <!--35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo -->
                         </group>
                     </sheet>
 
