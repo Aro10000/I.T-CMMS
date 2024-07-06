@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+        <record id="action_property_view_offers" model="ir.actions.act_window"><!--# STEP 27-I. Actions and Buttons: Working with States and Smart Buttons -->
+            <field name="name">Property</field>
+            <field name="res_model">estate.property.offer</field>
+            <field name="view_mode">tree,form</field>
+
+        </record>
+
+        <!-- 30. Adding Search View to our Module | Filters And Groups-->
+        <record id="estate_property_search_view" model="ir.ui.view"><!-- 30. Adding Search View to our Module | Filters And Groups-->
+            <field name="name">estate.property.search</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="type_id"/>
+                    <field name="postcode"/>
+                    <field name="buyer_id"/>
+                    <field name="date_availability"/>
+                    <field name="expected_price"/>
+                    <field name="best_offer"/>
+                    <field name="selling_price"/>
+                    <field name="state"/>
+                    <filter string="Accepted Offer" name="accepted_state" domain="[('state', '=', 'accepted')]"/>
+                    <filter string="Cancelled" name="cancel_state" domain="[('state', '=', 'cancel')]"/>
+                    <separator/><!-- 30. Adding Search View to our Module | Filters And Groups-->
+                    <filter string="New" name="new_state" domain="[('state', '=', 'new')]"/><!-- 30. Adding Search View to our Module | Filters And Groups-->
+                    <filter string="Received Offer" name="received_state" domain="[('state', '=', 'received')]"/>
+                    <filter string="Sold" name="sold_state" domain="[('state', '=', 'sold')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/><!-- 30. Adding Search View to our Module | Filters And Groups-->
+                    </group>
+                    <searchpanel>
+                        <field name="state" icon="fa-filter" groupby="group_by_state" limit="0"/><!-- 30. Adding Search View to our Module | Filters And Groups-->
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <!-- 30. Adding Kanban View to our Module | Filters And Groups-->
+        <record id="estate_property_kanban_view" model="ir.ui.view"><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+            <field name="name">estate.property.kanban</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="type_id"/>
+                    <field name="postcode"/>
+                    <field name="buyer_id"/>
+                    <field name="date_availability"/>
+                    <field name="expected_price"/>
+                    <field name="best_offer"/>
+                    <field name="selling_price"/>
+                    <field name="state"/>
+                    <template>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="o_kanban_bottom_left">
+                                        <field name="offer_count"/> Offer(s)
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </template>
+                </kanban>
+            </field>
+        </record>
 
         <!-- Step: 3 "Third Action", "Tree_View Action" -->
         <record id="estate_property_tree_view" model="ir.ui.view">
@@ -15,6 +89,7 @@
                     <field name="expected_price"/>
                     <field name="best_offer"/>
                     <field name="selling_price"/>
+                    <field name="state" widget="badge"/>
                 </tree>
             </field>
         </record>
@@ -25,13 +100,24 @@
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
                 <form>
+                    <header><!--# STEP 27-C. Actions and Buttons: Working with States and Smart Buttons -->
+                        <button name="action_sold" type="object" string="Sold" class="btn btn-primary"/><!--# STEP 27C. Actions and Buttons: Working with States and Smart Buttons -->
+                        <button name="action_cancel" type="object" string="Cancel" class="btn btn-danger"/>
+                        <field name="state" widget="statusbar"/><!--# STEP 27-E. Actions and Buttons: Working with States and Smart Buttons -->
+                    </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box"><!--# STEP 27-G. Actions and Buttons: Working with States and Smart Buttons -->
+                            <button class="oe_stat_button" name="%(real_estate_ads.action_property_view_offers)d" type="action">
+                                <field name="offer_count" string="Offers" widget="statinfo"/>
+                            </button>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="name" widget="char_emojis" placeholder="Property Name"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                             <group>
+                                <field name="state"/><!--# STEP 27-B. Actions and Buttons: Working with States and Smart Buttons -->
                                 <field name="type_id"/>
-                                <field name="postcode"/>
+                                <field name="postcode" password="True"/>
                                 <field name="date_availability"/>
                             </group>
                             <group>
@@ -49,30 +135,30 @@
                                     <field name="bedrooms"/>
                                     <field name="living_area"/>
                                     <field name="facades"/>
-                                    <field name="garage"/>
+                                    <field name="garage" widget="boolean_toggle"/><!--28-B Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                     <field name="garden"/>
-                                    <field name="garden_area"/>
-                                    <field name="garden_orientation"/>
+                                    <field name="garden_area" attrs="{'invisible': [('garden', '=', False)], 'readonly': [('garden', '=', True)]}"/><!--28-B Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
+                                    <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}" widget="radio"/><!--28-B Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                     <field name="total_area"/>
                                 </group>
                             </page>
                             <page string="Offers">
                                 <field name='offer_ids'>
-                                    <tree editable="button">
+                                    <tree editable="button" decoration-success="status == 'accepted'" decoration-danger="status == 'refuse'"><!--28-C Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                         <field name="price"/>
                                         <field name="partner_id"/>
                                         <field name="creation_date"/>
                                         <field name="validity"/>
-                                        <field name="deadline"/>
+                                        <field name="deadline" widget="remaining_days"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                         <field name="status" nolable="1"/>
                                     </tree>
                                 </field>
                             </page>
                             <page string="Other Info">
                                 <group>
-                                    <field name="sales_id"/>
+                                    <field name="sales_id" widget="many2one_avatar_user"/><!--28-c Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                     <field name="buyer_id"/>
-                                    <field name="phone"/>
+                                    <field name="phone" widget="phone"/><!--28-A Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                                 </group>
                             </page>
                         </notebook>
@@ -87,7 +173,7 @@
         <record id="action_property" model="ir.actions.act_window">
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="estate_property_tree_view"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

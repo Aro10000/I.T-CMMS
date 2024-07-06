@@ -30,6 +30,12 @@ class Property(models.Model):
     _description = 'Estate Properties'
 
     name = fields.Char(string='Name', required=True)
+    state = fields.Selection([('new', 'New'),# STEP 27-A. Actions and Buttons: Working with States and Smart Buttons
+                              ('received', 'Offer Received'),
+                              ('accepted', 'Offer Accepted'),
+                              ('sold', 'Sold'),
+                              ('cancel', 'Cancelled')],
+                             default='new', string='Status')
     # Add Many2may(tag_ids) Field To this Model('estate.property') to link with Co-Model('estate.property.tag')
     tag_ids = fields.Many2many('estate.property.tag', string='Property Tag')
     # Add Many2one(type_id) Field To this Model('estate.property') to link with Co-Model('estate.property.type')
@@ -75,6 +81,18 @@ class Property(models.Model):
     #Always put "Compute Fields" below its "Compute Function" when the compute= attribute is not a string
     total_area = fields.Integer(string='Total Area', compute=_compute_total_area)# Always use the "Compute" Attribute: for Compute Fields
 
+    def action_sold(self):# STEP 27-D. Actions and Buttons: Working with States and Smart Buttons -->
+        self.state = 'sold'
+    def action_cancel(self):# STEP 27-D. Actions and Buttons: Working with States and Smart Buttons -->
+        self.state = 'cancel'
+
+    @api.depends('offer_ids')# STEP 27-H. Actions and Buttons: Working with States and Smart Buttons -->
+    def _compute_offer_count(self):
+        for rec in self:
+            rec.offer_count = len(rec.offer_ids)
+
+    offer_count = fields.Integer(string="Offer Count", compute=_compute_offer_count)
+
 
 #        SECOND MODEL
 class PropertyType(models.Model):
@@ -90,4 +108,5 @@ class PropertyTag(models.Model):
     _description = 'Estate Properties Tag'
 
     name = fields.Char(string='Name', required=True)
+    color = fields.Integer(string='Color')
 

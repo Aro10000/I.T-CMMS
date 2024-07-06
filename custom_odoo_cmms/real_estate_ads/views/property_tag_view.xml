@@ -22,6 +22,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="color" widget="color_picker"/><!--28-D Adding Sprinkles to our Logic and View | Notebook, Page, Attrs and More  -->
                         </group>
                     </sheet>
 
