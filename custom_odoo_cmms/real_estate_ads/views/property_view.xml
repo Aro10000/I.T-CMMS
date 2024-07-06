@@ -115,6 +115,22 @@
             </field>
         </record>
 
+        <!--33. Working with Gantt and Graph View-->
+        <record id="estate_property_graph_view" model="ir.ui.view">
+            <field name="name">estate.property.graph</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="name"/><!-- -->
+                    <field name="selling_price"/><!-- -->
+                    <field name="expected_price"/><!-- -->
+                    <field name="facades"/><!-- -->
+                    <field name="bedrooms"/>
+                    <field name="state"/><!-- -->
+                </graph>
+            </field>
+        </record>
+
         <!-- Step: 3 "Third Action", "Tree_View Action" -->
         <record id="estate_property_tree_view" model="ir.ui.view">
             <field name="name">estate.property.tree</field>
@@ -225,7 +241,7 @@
         <record id="action_property" model="ir.actions.act_window">
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
-            <field name="view_mode">tree,kanban,form,pivot</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="estate_property_tree_view"/><!-- Change this ref=" TO ANY 'VIEW ID' TO SET AS DEFAULT"-->
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
