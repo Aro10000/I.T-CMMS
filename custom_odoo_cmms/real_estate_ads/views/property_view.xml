@@ -45,14 +45,14 @@
             </field>
         </record>
 
-        <!-- 30. Adding Kanban View to our Module | Filters And Groups-->
+        <!-- 31. Adding Kanban View to our Module -->
         <record id="estate_property_kanban_view"
-                model="ir.ui.view"><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+                model="ir.ui.view"><!-- 31. Working Kanban View to our Module -->
             <field name="name">estate.property.kanban</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="state" on_create="quick_create"
-                        quick_creat_view="real_estate_ads.quick_create_estate_property_form_view"><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+                        quick_creat_view="real_estate_ads.quick_create_estate_property_form_view"><!-- 31. Working Kanban View to our Module -->
                     <field name="name"/>
                     <field name="type_id"/>
                     <field name="postcode"/>
@@ -64,14 +64,14 @@
                     <field name="state"/>
                     <template>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click"><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+                            <div class="oe_kanban_global_click"><!-- 31. Working Kanban View to our Module -->
                                 <div class="oe_kanban_details">
                                     <strong class="o_kanban_record_title">
                                         <field name="name"/>
                                     </strong>
                                     <div class="o_kanban_tags_section">
                                         <field name="tag_ids" widget="many2many_tags"
-                                               options="{'color_field': 'color'}"/><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+                                               options="{'color_field': 'color'}"/><!-- 31. Working Kanban View to our Module -->
                                     </div>
                                     <div class="o_kanban_record_bottom">
                                         <div class="o_kanban_bottom_left">
@@ -87,7 +87,7 @@
             </field>
         </record>
         <record id="quick_create_estate_property_form_view"
-                model="ir.ui.view"><!-- 30. Working Kanban View to our Module | Filters And Groups-->
+                model="ir.ui.view"><!-- 31. Working Kanban View to our Module -->
             <field name="name">estate.property.form</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
@@ -96,6 +96,22 @@
                         <field name="name"/>
                     </group>
                 </form>
+            </field>
+        </record>
+
+        <!-- 32. Adding Pivot View to our Module -->
+        <record id="estate_property_pivot_view" model="ir.ui.view">
+            <field name="name">estate.property.pivot</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="name" type="row"/><!-- 32-(ADD ROW Lasts) Adding Pivot View to our Module -->
+                    <field name="selling_price" type="measure"/><!-- 32. Adding Pivot View to our Module -->
+                    <field name="expected_price" type="measure"/><!-- 32. Adding Pivot View to our Module -->
+                    <field name="facades" type="measure"/><!-- 32. Adding Pivot View to our Module -->
+                    <field name="bedrooms" type="measure"/>
+                    <field name="state" type="col"/><!-- 32. Adding Pivot View to our Module -->
+                </pivot>
             </field>
         </record>
 
@@ -209,7 +225,7 @@
         <record id="action_property" model="ir.actions.act_window">
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">tree,kanban,form,pivot</field>
             <field name="view_id" ref="estate_property_tree_view"/><!-- Change this ref=" TO ANY 'VIEW ID' TO SET AS DEFAULT"-->
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
