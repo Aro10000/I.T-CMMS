@@ -85,10 +85,18 @@ class PropertOffer(models.Model):
     #35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
     def action_accept_offer(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
         if self.property_id:
+            self._validate_accepted_offer()
             self.property_id.write({
                 'selling_price': self.price# This LOGIC is to allow "Accepted button" to Automatically update "Selling Price" When Selected or Click.
             })
         self.status = 'accepted'
+
+    def _validate_accepted_offer(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
+        offer_ids = self.env['estate.property.offer'].search([
+            ('property_id', '=', self.property_id.id), ('status', '=', 'accepted'),
+        ])
+        if offer_ids:
+            raise ValidationError("You have an offer already")
 
     def action_decline_offer(self):#35. [EXTRA] Understanding Attrs, Sequence and Widgets Available in Odoo-->
         self.status = 'refused'
