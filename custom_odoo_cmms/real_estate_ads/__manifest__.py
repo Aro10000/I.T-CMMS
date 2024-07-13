@@ -12,6 +12,7 @@
         #Groups
         'security/ir.model.access.csv',
         'security/res_groups.xml',
+        'security/model_access.xml',#38. Getting Advanced with Access Rights
         
         'views/property_view.xml',
         'views/property_type_view.xml',

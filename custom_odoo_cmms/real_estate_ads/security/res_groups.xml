@@ -9,7 +9,7 @@
         <field name="name">User: Manage own property</field>
         <field name="category_id" ref="real_estate_ads.module_category_real_estate"/><!--37. Adding Groups to our Property Model-->
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="users" eval="[Command.link(ref('base.user_demo'))]"/><!--37. Adding Groups to our Property Model-->
+        <!--field name="users" eval="[Command.link(ref('base.user_demo'))]"/--><!--37. Adding Groups to our Property Model-->
     </record>
 
     <record id="group_property_manager" model="res.groups">
