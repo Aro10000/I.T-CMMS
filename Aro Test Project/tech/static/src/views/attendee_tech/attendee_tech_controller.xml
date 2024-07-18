@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="tech.AttendeeTechController" t-inherit="web.TechController" t-inherit-mode="primary" owl="1">
+        <DatePicker position="after">
+            <div id="tech_sync_wrapper" t-if="isSystemUser">
+                <div id="tech_sync_title" class="o_tech_sync text-center">
+                    <span class="text-primary fs-6">Synchronize with:</span>
+                </div>
+                <div id="tech_sync" class="container inline btn-group justify-content-evenly align-items-center">
+                    <div id="google_tech_sync" class="o_tech_sync" t-if="isSystemUser">
+                        <button type="button" id="google_sync_activate" class="btn btn-muted" t-on-click="() => this.configureTechProviderSync('google')">
+                            <b><i class='fa fa-plug'/> Google</b>
+                        </button>
+                    </div>
+                    <div id="microsoft_tech_sync" class="o_tech_sync" t-if="isSystemUser">
+                        <button type="button" id="microsoft_sync_activate" class="btn btn-muted" t-on-click="() => this.configureTechProviderSync('microsoft')">
+                            <b><i class='fa fa-plug'/> Outlook</b>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </DatePicker>
+    </t>
+
+    <t t-name="tech.AttendeeTechController.controlButtons" t-inherit="web.TechController.controlButtons" owl="1">
+        <xpath expr="//span[hasclass('o_tech_navigation_buttons')]" position="before">
+            <span class="o_tech_create_buttons">
+                <button class="btn btn-primary o-tech-button-new me-1" t-on-click="onClickAddButton">New</button>
+            </span>
+        </xpath>
+    </t>
+</templates>

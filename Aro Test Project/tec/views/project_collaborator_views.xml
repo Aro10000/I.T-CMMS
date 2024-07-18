@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tec_sharing_access_view_tree" model="ir.ui.view">
+        <field name="name">tec.collaborator.view.tree</field>
+        <field name="model">tec.collaborator</field>
+        <field name="arch" type="xml">
+            <tree string="Tec Collaborators" create="0">
+                <field name="partner_id" options="{'no_create': True}"/>
+                <field name="partner_email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tec_collaborator_view_search" model="ir.ui.view">
+        <field name="name">tec.collaborator.view.search</field>
+        <field name="model">tec.collaborator</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id" />
+                <field name="tec_id" />
+                <group expand="0" string="Group By">
+                    <filter name="tec" string="Tec" context="{'group_by': 'tec_id'}" />
+                    <filter name="collaborator" string="Collaborator" context="{'group_by': 'partner_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tec_collaborator_action" model="ir.actions.act_window">
+        <field name="name">Tec Collaborators</field>
+        <field name="res_model">tec.collaborator</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('tec_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="tec_collaborator_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No collaborators found
+            </p>
+            <p>
+                Collaborate efficiently with key stakeholders by sharing with them the Kanban view of your tasks. Collaborators will be able to edit parts of tasks and send messages.
+            </p>
+        </field>
+    </record>
+
+</odoo>

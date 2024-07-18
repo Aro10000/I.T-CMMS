@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="tec.TecControlPanelContentBadge" owl="1">
+        <t t-tag="isTecUser ? 'button' : 'span'" class="badge border d-flex p-2 ms-2 bg-view" data-hotkey="y">
+            <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}}"/>
+            <span t-att-class="'fw-normal ms-1' + (data.color === 0 ? ' text-muted' : '')" t-esc="data.status"/>
+        </t>
+    </t>
+
+    <t t-name="tec.TecControlPanelContent" owl="1">
+        <t t-if="showTecUpdate">
+            <li t-if="isTecUser" class="o_tec_updates_breadcrumb ps-3" t-on-click="onStatusClick">
+                <t t-call="tec.TecControlPanelContentBadge"></t>
+            </li>
+            <li t-else="" class="o_tec_updates_breadcrumb ps-3">
+                <t t-call="tec.TecControlPanelContentBadge"></t>
+            </li>
+        </t>
+    </t>
+
+    <t t-name="tec.Breadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary" owl="1">
+        <xpath expr="//ol" position="inside">
+            <t t-call="tec.TecControlPanelContent"/>
+        </xpath>
+    </t>
+
+    <t t-name="tec.Breadcrumbs.Small" t-inherit="web.Breadcrumbs.Small" t-inherit-mode="primary" owl="1">
+        <xpath expr="//ol" position="inside">
+            <t t-call="tec.TecControlPanelContent"/>
+        </xpath>
+    </t>
+
+    <t t-name="tec.TecControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
+            <t t-call="tec.Breadcrumbs"/>
+        </xpath>
+    </t>
+
+    <t t-name="tec.TecControlPanel.Small" t-inherit="web.ControlPanel.Small" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.Breadcrumbs.Small']" position="replace">
+            <t t-call="tec.Breadcrumbs.Small"/>
+        </xpath>
+    </t>
+
+    <t t-name="tec.TecControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+            <t t-call="tec.TecControlPanel.Regular"/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.ControlPanel.Small']" position="replace">
+            <t t-call="tec.TecControlPanel.Small"/>
+        </xpath>
+    </t>
+
+</templates>

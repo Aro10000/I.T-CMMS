@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tech_provider_config_view_form" model="ir.ui.view">
+        <field name="name">tech.provider.config.view.form</field>
+        <field name="model">tech.provider.config</field>
+        <field name="arch" type="xml">
+            <form js_class="tech_provider_config_form">
+                <field name="external_tech_provider" widget="radio" options="{'horizontal': true}"/>
+                <div attrs="{'invisible': [('external_tech_provider', '!=', 'google')]}">
+                    <img alt="Google Tech icon" src="/tech/static/src/img/google_tech_40.png" style="height: 40px; margin-right: 5px"/>
+                    <span class="me-1 o_form_label">Google Tech</span>
+                    <a href="https://www.odoo.com/documentation/16.0/applications/productivity/tech/google.html" title="Read More" class="o_doc_link" target="_blank"></a>
+                    <div class="text-muted mt-2">
+                        Synchronize your tech with Google Tech
+                    </div>
+                    <group>
+                        <field name="cal_client_id" attrs="{'required': [('external_tech_provider', '=', 'google')]}"/>
+                        <field name="cal_client_secret" password="True" attrs="{'required': [('external_tech_provider', '=', 'google')]}"/>
+                    </group>
+                </div>
+                <div attrs="{'invisible': [('external_tech_provider', '!=', 'microsoft')]}">
+                    <img alt="Microsoft Outlook icon" src="/tech/static/src/img/microsoft_tech_40.png" style="height: 40px; margin-right: 5px"/>
+                    <span class="me-1 o_form_label">Outlook Tech</span>
+                    <a href="https://www.odoo.com/documentation/16.0/applications/productivity/tech/outlook.html" title="Read More" class="o_doc_link" target="_blank"></a>
+                    <div class="text-muted mt-2">
+                        Synchronize your tech with Outlook
+                    </div>
+                    <group>
+                        <field name="microsoft_outlook_client_identifier" attrs="{'required': [('external_tech_provider', '=', 'microsoft')]}"/>
+                        <field name="microsoft_outlook_client_secret" password="True" attrs="{'required': [('external_tech_provider', '=', 'microsoft')]}"/>
+                    </group>
+                </div>
+                <footer>
+                    <a role="button" title="Connect" class="o_tech_activate_external_cal btn btn-primary" t-on-click="onConnect">Connect</a>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

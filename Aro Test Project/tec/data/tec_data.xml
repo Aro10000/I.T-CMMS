@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tec Stages -->
+    <record id="tec_tec_stage_0" model="tec.tec.stage">
+        <field name="sequence">10</field>
+        <field name="name">To Do</field>
+    </record>
+
+    <record id="tec_tec_stage_1" model="tec.tec.stage">
+        <field name="sequence">15</field>
+        <field name="name">In Progress</field>
+    </record>
+
+    <record id="tec_tec_stage_2" model="tec.tec.stage">
+        <field name="sequence">20</field>
+        <field name="name">Done</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <record id="tec_tec_stage_3" model="tec.tec.stage">
+        <field name="sequence">25</field>
+        <field name="name">Canceled</field>
+        <field name="fold" eval="True"/>
+    </record>
+</odoo>
