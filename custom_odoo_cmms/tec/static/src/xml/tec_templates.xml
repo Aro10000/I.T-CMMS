@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <span t-name="tec.statusWithColor" t-att-class="'o_status_bubble me-2 o_color_bubble_' + color"></span>
+
+    <div t-name="tec.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
+            <t t-call="tec.TecControlPanelContent">
+                <t t-set="showTecUpdate" t-value="show_tec_update"/>
+                <t t-set="isTecUser" t-value="is_tec_user"/>
+            </t>
+        </xpath>
+    </div>
+
+    <t t-name="tec.task.PrivateTecName">
+        <span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+    </t>
+
+</templates>

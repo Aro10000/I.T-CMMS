@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.module_category_services_tec" model="ir.module.category">
+        <field name="description">Helps you manage your tecs and tasks by tracking them, generating plannings, etc...</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="group_tec_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_services_tec"/>
+    </record>
+
+    <record id="group_tec_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_services_tec"/>
+        <field name="implied_ids" eval="[(4, ref('group_tec_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_subtask_tec" model="res.groups">
+        <field name="name">Use Subtaskx</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_tec_rating" model="res.groups">
+        <field name="name">Use Rating on Tec</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_tec_stages" model="res.groups">
+        <field name="name">Use Stages on Tec</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_tec_recurring_tasks" model="res.groups">
+        <field name="name">Use Recurring Taskx</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_tec_task_dependencies" model="res.groups">
+        <field name="name">Use Taskx Dependencies</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_tec_milestone" model="res.groups">
+        <field name="name">Use Milestonesx</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+<data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tec_comp_rule">
+        <field name="name">Tec: multi-company</field>
+        <field name="model_id" ref="model_tec_tec"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="tec_tec_manager_rule">
+        <field name="name">Tec: tec manager: see all</field>
+        <field name="model_id" ref="model_tec_tec"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tec_public_members_rule">
+        <field name="name">Tec: employees: following required for follower-only tecs</field>
+        <field name="model_id" ref="model_tec_tec"/>
+        <field name="domain_force">['|',
+                                        ('privacy_visibility', '!=', 'followers'),
+                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                    ]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_comp_rule">
+        <field name="name">Tec/Task: multi-company</field>
+        <field name="model_id" ref="model_tec_task"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="task_visibility_rule">
+        <field name="name">Tec/Task: employees: follow required for follower-only tecs</field>
+        <field name="model_id" ref="model_tec_task"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('tec_id', '!=', False),
+                    '|',
+                        ('tec_id.privacy_visibility', '!=', 'followers'),
+                        ('tec_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tec_manager_all_tec_tasks_rule">
+        <field name="name">Tec/Task: tec manager: see all tasks linked to a tec or its own tasks</field>
+        <field name="model_id" ref="model_tec_task"/>
+        <field name="domain_force">[
+            '|', ('tec_id', '!=', False),
+                 ('user_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_type_manager_rule">
+        <field name="name">Tec/Task Type: manager sees all</field>
+        <field name="model_id" ref="model_tec_task_type"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_type_visibility_rule">
+        <field name="name">Tec/Task Type: see own or unowned stages</field>
+        <field name="model_id" ref="model_tec_task_type"/>
+        <field name="domain_force">[('user_id', 'in', (False, user.id))]</field>
+    </record>
+
+    <record model="ir.rule" id="task_type_own_write_rule">
+        <field name="name">Tec/Task Type: write own stages</field>
+        <field name="model_id" ref="model_tec_task_type"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('tec.group_tec_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="report_tec_task_user_report_comp_rule">
+        <field name="name">Task Analysis multi-company</field>
+        <field name="model_id" ref="model_report_tec_task_user"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_tec_personal_stage_my" model="ir.rule">
+        <field name="name">Tec: See my own personal stage</field>
+        <field name="model_id" ref="tec.model_tec_task_stage_personal"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ir_rule_private_task" model="ir.rule">
+        <field name="name">Tec: See private tasks</field>
+        <field name="model_id" ref="tec.model_tec_task"/>
+        <field name="domain_force">[
+            ('tec_id.privacy_visibility', '!=', 'followers'),
+            '|', '|', ('tec_id', '!=', False),
+                      ('parent_id', '!=', False),
+                 ('user_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_user'))]"/>
+    </record>
+
+     <!-- Portal -->
+    <record id="tec_tec_rule_portal" model="ir.rule">
+        <field name="name">Tec: portal users: portal and following</field>
+        <field name="model_id" ref="tec.model_tec_tec"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('privacy_visibility', '=', 'portal'),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="tec_collaborator_rule_portal" model="ir.rule">
+        <field name="name">Tec/Collaborator: portal users: can only see his own collobaroration in shared tecs</field>
+        <field name="model_id" ref="tec.model_tec_collaborator"/>
+        <field name="domain_force">[
+            ('tec_id.privacy_visibility', '=', 'portal'),
+            ('partner_id', '=', user.partner_id.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="tec_task_rule_portal" model="ir.rule">
+        <field name="name">Tec/Task: portal users: (portal and following tec) or (portal and following task)</field>
+        <field name="model_id" ref="tec.model_tec_task"/>
+        <field name="domain_force">[
+        ('tec_id.privacy_visibility', '=', 'portal'),
+        ('active', '=', True),
+        '|',
+            ('tec_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+            ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="tec_task_rule_portal_tec_sharing" model="ir.rule">
+        <field name="name">Tec/Task: portal users: portal user can edit with tec sharing feature</field>
+        <field name="model_id" ref="tec.model_tec_task"/>
+        <field name="active">0</field>
+        <field name="domain_force">[
+            ('tec_id.privacy_visibility', '=', 'portal'),
+            ('active', '=', True),
+            '|',
+                ('tec_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+            ('tec_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record model="ir.rule" id="update_comp_rule">
+        <field name="name">Tec/Updates: multi-company</field>
+        <field name="model_id" ref="model_tec_update"/>
+        <field name="domain_force">[('tec_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="update_visibility_rule">
+        <field name="name">Tec/Update: employees: follow required for follower-only tecs</field>
+        <field name="model_id" ref="model_tec_update"/>
+        <field name="domain_force">[
+        '|',
+            ('tec_id.privacy_visibility', '!=', 'followers'),
+            '|',
+                ('tec_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('user_id', '=', user.id),
+                    ('tec_id.user_id', '=', user.id)
+        ]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="report_tec_task_user_rule">
+        <field name="name">Tasks Analysis: tec visibility User</field>
+        <field name="model_id" ref="model_report_tec_task_user"/>
+        <field name="domain_force">[
+        '|',
+            ('tec_id.privacy_visibility', '!=', 'followers'),
+            '|',
+                ('tec_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('user_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="report_tec_task_manager_rule">
+        <field name="name">Tasks Analysis: tec visibility Manager</field>
+        <field name="model_id" ref="model_report_tec_task_user"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record id="update_visibility_tec_admin" model="ir.rule">
+        <field name="name">Tec updates : Tec user can see all tec updates</field>
+        <field name="model_id" ref="tec.model_tec_update"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="burndown_chart_tec_user_rule">
+        <field name="name">Burndown chart: tec visibility User</field>
+        <field name="model_id" ref="model_tec_task_burndown_chart_report"/>
+        <field name="domain_force">[
+        '|',
+            ('tec_id.privacy_visibility', '!=', 'followers'),
+            '|',
+                ('tec_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('user_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="burndown_chart_tec_manager_rule">
+        <field name="name">Burndown chart: tec visibility User</field>
+        <field name="model_id" ref="model_tec_task_burndown_chart_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="milestone_comp_rule">
+        <field name="name">Tec/Milestone: multi-company</field>
+        <field name="model_id" ref="model_tec_milestone"/>
+        <field name="domain_force">[('tec_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="milestone_visibility_rule">
+        <field name="name">Tec/Milestone: employees: follow required for follower-only tecs</field>
+        <field name="model_id" ref="model_tec_milestone"/>
+        <field name="domain_force">[
+        '|',
+            ('tec_id.privacy_visibility', '!=', 'followers'),
+            '|',
+                ('tec_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('tec_id.user_id', '=', user.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="milestone_visibility_tec_admin" model="ir.rule">
+        <field name="name">Tec/Milestone: Tec manager can see all tec milestones</field>
+        <field name="model_id" ref="tec.model_tec_milestone"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('tec.group_tec_manager'))]"/>
+    </record>
+
+    <record id="tec_milestone_rule_portal_tec_sharing" model="ir.rule">
+        <field name="name">Tec/milestone portal users: portal user can read with tec sharing feature</field>
+        <field name="model_id" ref="tec.model_tec_milestone"/>
+        <field name="domain_force">[
+            ('tec_id.privacy_visibility', '=', 'portal'),
+            ('tec_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+</data>
+</odoo>
